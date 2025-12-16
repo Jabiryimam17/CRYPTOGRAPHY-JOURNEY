@@ -65,7 +65,3 @@ As the project evolves, it will increasingly focus on primitives and constructio
 
 ---
 
-## Structure
-
-A typical structure of the repository looks like:
-
