@@ -3,6 +3,7 @@
 //
 
 #include "../include//Diffie Hellman Key Exchange.h"
+#include "../../1_An_Introduction_To_Cryptography//include//Tools.h"
 
 DIFFIE_HELLMAN_KEY_EXCHANGE::DIFFIE_HELLMAN_KEY_EXCHANGE(ull _g, ull _p)
 {

@@ -6,15 +6,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OPENSSL_ROOT_DIR "C:/msys64/mingw64")
 set(OPENSSL_USE_STATIC_LIBS OFF)
 find_package(OpenSSL REQUIRED)
-add_executable(cryptography
-        main.cpp
-        "1 An Introduction To Cryptography/include/EEA.h"
-        "1 An Introduction To Cryptography/src/EEA.cpp"
-        "1 An Introduction To Cryptography/include/Tools.h"
-        "1 An Introduction To Cryptography/src/Tools.cpp"
-        "2 Discrete Logarithms and Diffie–Hellman/include/Diffie Hellman Key Exchange.h"
-        "2 Discrete Logarithms and Diffie–Hellman/src/Diffie Hellman Key Exchange.cpp"
+file(GLOB CRYPTO_SRC
+        "1_An_Introduction_To_Cryptography/src/*.cpp"
+        "2_Discrete_Log_DH/src/*.cpp"
 )
+
+file(GLOB CRYPTO_HDR
+        "1_An_Introduction_To_Cryptography/include/*.h"
+        "2_Discrete_Log_DH/include/*.h"
+)
+
+add_executable(cryptography main.cpp ${CRYPTO_SRC})
 
 target_link_libraries( cryptography
         OpenSSL::SSL

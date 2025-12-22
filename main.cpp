@@ -1,21 +1,22 @@
 
 
 
-#include <openssl/rand.h>
+#include "./2_Discrete_Log_DH/include/ELGAMAL.h"
 #include <iostream>
 
 int main() {
-    unsigned char buf[100];
+    // ull p = 4294967311ULL; // example small prime < 2^64
+    ull p = 1e9+7;
+    ull g = 2;
 
-    if (RAND_bytes(buf, 10) != 1) {
-        std::cerr << "OpenSSL RNG failed\n";
-        return 1;
-    }
+    ELGAMAL el(g, p);
 
-    for (unsigned char b : buf) {
-        std::cout << (int)b << " ";
-    }
-    std::cout << "\n";
+    ull message = 100000;
+    auto [c, d] = el.encrypt(message, el.public_key);
+    ull decrypted = el.decrypt(c, d);
+
+    std::cout << "Original: " << message << "\n";
+    std::cout << "Decrypted: " << decrypted << "\n";
 
     return 0;
 }

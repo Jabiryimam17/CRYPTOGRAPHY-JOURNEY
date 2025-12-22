@@ -5,7 +5,6 @@
 #ifndef CRYPTOGRAPHY_DIFFIE_HELLMAN_KEY_EXCHANGE_H
 #define CRYPTOGRAPHY_DIFFIE_HELLMAN_KEY_EXCHANGE_H
 #include <openssl/rand.h>
-#include "../../1 An Introduction To Cryptography//include//Tools.h"
 using ull = unsigned long long;
 class DIFFIE_HELLMAN_KEY_EXCHANGE
 {
