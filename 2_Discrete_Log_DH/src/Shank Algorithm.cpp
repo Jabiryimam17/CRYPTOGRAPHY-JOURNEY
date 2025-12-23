@@ -79,7 +79,7 @@ ull SHANK::solve_dhp(G g, G h, ull N)
         if (g_generated[i].second < h_g_inverse_generated[j].second) i++;
         else j++;
     }
-    return-1;
+    return 0;
 }
 
 G SHANK::mod_pow(G b, G e, G mod)

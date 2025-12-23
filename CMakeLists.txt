@@ -16,7 +16,8 @@ file(GLOB CRYPTO_HDR
         "2_Discrete_Log_DH/include/*.h"
 )
 
-add_executable(cryptography main.cpp ${CRYPTO_SRC})
+add_executable(cryptography main.cpp ${CRYPTO_SRC}
+        2_Discrete_Log_DH/src/CRT.cpp)
 
 target_link_libraries( cryptography
         OpenSSL::SSL
