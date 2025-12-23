@@ -2,10 +2,10 @@
 // Created by Jabir on 12/22/2025.
 //
 #include "../include//Tools.h"
-
-unsigned long long fast_exponentiation(unsigned long long b, unsigned long long e, unsigned long long MOD)
+using ull=unsigned long long;
+ull fast_exponentiation(ull b, ull e, ull MOD)
 {
-    unsigned long long res=1;
+    ull res=1;
     b %=MOD;
     while (e != 0)
     {
