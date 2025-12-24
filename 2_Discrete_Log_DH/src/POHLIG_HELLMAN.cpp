@@ -45,13 +45,16 @@ ull POHLIG_HELLMAN::solve_dhp_factor(G _g, G _h, ull q_pow, ull q, ull e)
     ull curr_q_pow=1;
     G p_h=_h;
     ull sol=0;
-
+    // general prefix optimization i am doing here is the following
+// the basic principe xi=lg(h*g^-(summation of x*q^j where j from 0 to i-1))^q^e-i-1 to base g
+// let us say p_h_i-1= (h*g^-(summation of xj*q^j where j from 0 to i-1)) then we can add the next one based on the lines 41-45
+// since p_h_i = p_h_i-1* g ^ -(xi*q^i)
     for (ull i=0; i < e; i++)
     {
         curr_g_pow/=q;
         G r_h=G::mod_pow(p_h, G(curr_g_pow), p);
         ull x_i=dlp_bruteforce.solve_dhp(r_h);
-        x_i %= q;// to indicate no solution exist
+        x_i %= q;
         ull val=x_i*curr_q_pow;
         G u_i=G::mod_pow(_g, G(q_pow-val), p);
         p_h = p_h*u_i%p;
@@ -61,7 +64,3 @@ ull POHLIG_HELLMAN::solve_dhp_factor(G _g, G _h, ull q_pow, ull q, ull e)
     return sol;
 
 }
-// general prefix optimization i am doing here is the following
-// the basic principe xi=lg(h*g^-(summation of x*q^j where j from 0 to i-1))^q^e-i-1 to base g
-// let us say p_h_i-1= (h*g^-(summation of xj*q^j where j from 0 to i-1)) then we can add the next one based on the lines 41-45
-// since p_h_i = p_h_i-1* g ^ -(xi*q^i)
