@@ -9,11 +9,13 @@ find_package(OpenSSL REQUIRED)
 file(GLOB CRYPTO_SRC
         "1_An_Introduction_To_Cryptography/src/*.cpp"
         "2_Discrete_Log_DH/src/*.cpp"
+        "Data_Structures/src/*.cpp"
 )
 
 file(GLOB CRYPTO_HDR
         "1_An_Introduction_To_Cryptography/include/*.h"
         "2_Discrete_Log_DH/include/*.h"
+        "Data_Structures/include/*.h"
 )
 
 add_executable(cryptography main.cpp ${CRYPTO_SRC}

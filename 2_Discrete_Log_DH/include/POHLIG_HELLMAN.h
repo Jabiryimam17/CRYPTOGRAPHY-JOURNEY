@@ -15,6 +15,7 @@ public:
     G g;
     ull N;
     POHLIG_HELLMAN_SHANK dlp_bruteforce;
+    POHLIG_HELLMAN(G _p);
     std::vector<std::pair<ull,std::pair<ull,ull>>> prime_factors;
     std::vector<Eq> equations;
     void factorize(ull _N);

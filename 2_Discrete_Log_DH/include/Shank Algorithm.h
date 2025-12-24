@@ -6,7 +6,6 @@
 #define CRYPTOGRAPHY_SHANK_ALGORITHM_H
 #include <vector>
 #include "../../Data_Structures//include/Group.h"
-#include "../../1_An_Introduction_To_Cryptography//include/Tools.h"
 using ull=unsigned long long;
 
 class SHANK // general shank bruteforce for any group

@@ -3,7 +3,7 @@
 //
 #include "../include//Group.h"
 G::G() : v(0) {}
-G::G(ull v):v(v){}
+G::G(unsigned long long v):v(v){}
 
 G G::operator*(G r) const
 {
@@ -40,7 +40,7 @@ bool G::operator==(G r) const
 G G::mod_pow(G b, G e, G mod)
 {
     G res(1);
-
+    b=b%mod;
     while (e > G(0))
     {
         if ((e & G(1))==G(1)) res = (res * b) % mod;
