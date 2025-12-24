@@ -5,29 +5,34 @@
 #ifndef CRYPTOGRAPHY_SHANK_ALGORITHM_H
 #define CRYPTOGRAPHY_SHANK_ALGORITHM_H
 #include <vector>
+#include "../../Data_Structures//include/Group.h"
+#include "../../1_An_Introduction_To_Cryptography//include/Tools.h"
 using ull=unsigned long long;
-struct G
-{
-    unsigned long long v;
-    G();
-    explicit G(unsigned long long v=0);
-    G operator*(G r) const;
 
-    bool operator>(G r) const;
-    bool operator<(G r) const;
-    G operator>>(G r) const;
-    G operator&(G r) const;
-    G operator%(G r) const;
-    bool operator==(G r) const;
-};
-class SHANK // general shank bruteforcer for any group
+class SHANK // general shank bruteforce for any group
 {
     public:
     G p;
-    std::vector<std::pair<ull,G>> g_generated, h_g_inverse_generated;
+
+    std::vector<std::pair<ull,G>> g_subgroup, h_coset_g_inverse;
     SHANK(G _p);
     ull solve_dhp(G g, G h, unsigned long long N);
-    static G mod_pow(G b, G e, G mod);
+
+};
+
+class POHLIG_HELLMAN_SHANK /// specialized for pohlig hellman breaker since it reused g many times
+{
+public:
+    G p;
+    G g;
+    G u_i;
+    ull q{},e{};
+    ull N;
+    std::vector<std::pair<ull, G>> g_subgroup, h_coset_g_inverse;
+    POHLIG_HELLMAN_SHANK();
+    void prepare(G _g, G _p, ull _q, ull _e);
+    void update(G h);
+    ull solve_dhp(G h);
 
 };
 

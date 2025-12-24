@@ -7,7 +7,7 @@
 std::pair<long long,long long> extended_euclidean_algorithm(long long a, long long b) {
     long long old_r=a, r=b;
     long long old_s=1, s=0;
-    long long old_t=0, t=0;
+    long long old_t=0, t=1;
     while (r!=0)
     {
         long long q=old_r/r;
