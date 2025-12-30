@@ -1,19 +1,12 @@
 
 
-
-#include "./2_Discrete_Log_DH//include/POHLIG_HELLMAN.h"
+#include "3_RSA/include/Tools.h"
 #include <iostream>
 
 int main()
 {
-    std::vector<Eq> equations{{2,3},{3,7}, {4, 16}};
-    std::cout << crt(equations) << std::endl;
-    G p(11251);
-    POHLIG_HELLMAN solver=POHLIG_HELLMAN(p);
-    ull sol=solver.solve_dhp(G(23), G(9689), 11250);
-    std::cout << sol << std::endl;
 
-
-
+    miller_rabin_test test=miller_rabin_test();
+    std::cout << test.random_prime_generator(5) << std::endl;
     return 0;
 }
