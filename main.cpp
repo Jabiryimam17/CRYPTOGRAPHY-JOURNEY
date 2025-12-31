@@ -1,12 +1,12 @@
 
 
-#include "3_RSA/include/Tools.h"
 #include <iostream>
+#include  "3_RSA/include/POLLAND.h"
 
 int main()
 {
 
-    miller_rabin_test test=miller_rabin_test();
-    std::cout << test.random_prime_generator(5) << std::endl;
+    auto [success, primes] = break_rsa_polland(13927189,2, 100);
+    std::cout << success << primes.first << ":" << primes.second << std::endl;
     return 0;
 }

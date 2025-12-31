@@ -1,0 +1,8 @@
+//
+// Created by Jabir on 12/31/2025.
+//
+
+#ifndef CRYPTOGRAPHY_POLLAND_H
+#define CRYPTOGRAPHY_POLLAND_H
+
+#endif //CRYPTOGRAPHY_POLLAND_H
