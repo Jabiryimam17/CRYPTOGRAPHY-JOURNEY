@@ -1,12 +1,14 @@
 
 
 #include <iostream>
-#include "4_Digital_Signatures/include/ELGAMAL_SIGNATURE.h"
+#include "./4_Digital_Signatures/include/DSA.h"
 int main()
 {
 
-    ELGAMAL_SIGNATURE sig(6961); // small prime
-    bool ok = sig.verify_message({1614,{2709, 2994}}, 437, 4250, 6961);
-    std::cout << (ok ? "Verified!" : "Failed") << std::endl;
+    DSA_CUSTOM dsa = DSA_CUSTOM(48731, 443, 242,5260);
+    auto sig=dsa.sign_message(343);
+    auto ok = dsa.verify_message(sig, 5260, 3438, 443,48731);
+    std::cout << (ok?"Verified!":"Failed!");
+
     return 0;
 }
