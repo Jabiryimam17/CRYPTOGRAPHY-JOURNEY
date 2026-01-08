@@ -6,7 +6,6 @@
 
 #include <cmath>
 #include <numbers>
-#include <numeric>
 
 ull miller_rabin_test::random_prime_generator(unsigned int k)
 {
