@@ -4,15 +4,15 @@
 
 
 
-#include "../include//ROOT_GENERATOR.h"
+#include "../include//GENERATE_ROOT.h"
 ull generate_root(ull p)
 {
     std::vector<ull> primes=prime_factorize(p-1);
-    ull g = 0;
+    ull g;
     bool g_found=false;
     while (!g_found)
     {
-        RAND_bytes(reinterpret_cast<unsigned char*>(g), sizeof(g));
+        RAND_bytes(reinterpret_cast<unsigned char*>(&g), sizeof(g));
         g%=p;
         if (g < 2) continue;
         g_found=true;

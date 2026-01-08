@@ -15,3 +15,7 @@ ull fast_exponentiation(ull b, ull e, ull MOD)
     }
     return res;
 }
+ull mod_mul(ull x, ull y, ull p)
+{
+    return (x % p) * (y % p) % p; // safe for small/medium primes
+}

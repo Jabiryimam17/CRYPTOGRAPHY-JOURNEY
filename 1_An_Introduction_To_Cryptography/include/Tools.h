@@ -4,5 +4,7 @@
 
 #ifndef CRYPTOGRAPHY_TOOLS_H_I
 #define CRYPTOGRAPHY_TOOLS_H_I
-unsigned long long fast_exponentiation(unsigned long long b, unsigned long long e, unsigned long long mod);
+using ull = unsigned long long;
+ull fast_exponentiation(ull b, ull e, ull mod);
+ull mod_mul(ull x, ull y, ull p);
 #endif //CRYPTOGRAPHY_TOOLS_H_I

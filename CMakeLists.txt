@@ -11,6 +11,7 @@ file(GLOB CRYPTO_SRC
         "2_Discrete_Log_DH/src/*.cpp"
         "Data_Structures/src/*.cpp"
         "3_RSA/src/*.cpp"
+        "4_Digital_Signatures/src/*.cpp"
 )
 
 file(GLOB CRYPTO_HDR
@@ -18,6 +19,7 @@ file(GLOB CRYPTO_HDR
         "2_Discrete_Log_DH/include/*.h"
         "Data_Structures/include/*.h"
         "3_RSA/include/*.h"
+        "4_Digital_Signatures/include/*.h"
 )
 
 add_executable(cryptography main.cpp ${CRYPTO_SRC})

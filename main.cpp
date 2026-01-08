@@ -1,13 +1,12 @@
 
 
 #include <iostream>
-#include "./3_RSA//src/JACOBI.cpp"
-
+#include "4_Digital_Signatures/include/ELGAMAL_SIGNATURE.h"
 int main()
 {
 
-    ll val=jacobi(9365449244297,228530738017);
-    std::cout << val;
-
+    ELGAMAL_SIGNATURE sig(6961); // small prime
+    bool ok = sig.verify_message({1614,{2709, 2994}}, 437, 4250, 6961);
+    std::cout << (ok ? "Verified!" : "Failed") << std::endl;
     return 0;
 }
