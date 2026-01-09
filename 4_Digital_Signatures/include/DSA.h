@@ -7,6 +7,8 @@
 #include <openssl/rand.h>
 #include "../../1_An_Introduction_To_Cryptography/include/Tools.h"
 #include "../../1_An_Introduction_To_Cryptography/include/EEA.h"
+#include "../../3_RSA/include/Tools.h"
+#include "../../2_Discrete_Log_DH/include/GENERATE_ROOT.h"
 using ull=unsigned long long;
 struct SIGNED_MESSAGE
 {
@@ -21,7 +23,7 @@ public:
     ull q;
     ull a;
     ull g;
-    DSA_CUSTOM(ull _p, ull _q, ull _a, ull _g);
+    DSA_CUSTOM();
     SIGNED_MESSAGE sign_message(ull m);
     bool verify_message(SIGNED_MESSAGE s_m, ull g, ull A, ull q, ull p);
 

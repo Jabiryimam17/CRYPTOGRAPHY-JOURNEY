@@ -13,13 +13,15 @@ ull miller_rabin_test::random_prime_generator(unsigned int k)
     bool prime=false;
     while (!prime)
     {
-        RAND_bytes(reinterpret_cast<unsigned char*>(r_p), sizeof(r_p));
+        RAND_bytes(reinterpret_cast<unsigned char*>(&r_p), 3);
         if (r_p%2==0) continue;
         ull witness = 0;
         prime=true;
         for (int i=0; i < k; i++)
         {
-            RAND_bytes(reinterpret_cast<unsigned char*>(witness), sizeof(witness));
+            RAND_bytes(reinterpret_cast<unsigned char*>(&witness), sizeof(witness));
+            witness%=r_p;
+            if (witness==0) continue;
             if (is_composite(r_p, witness)) {prime=false; break;}
         }
     };
@@ -40,7 +42,7 @@ bool miller_rabin_test::is_composite(ull n, ull a)
         return false;
 
     for (ull i = 1; i < s; i++) {
-        x = (x * x) % n;
+        x = mod_mul(x, x, n);
         if (x == n - 1)
             return false;
     }
@@ -54,7 +56,7 @@ ull miller_rabin_test::riemann_based_random_prime_generator() // conjecture base
     bool prime=false;
     while (!prime)
     {
-        RAND_bytes(reinterpret_cast<unsigned char*>(r_p), sizeof(r_p));
+        RAND_bytes(reinterpret_cast<unsigned char*>(&r_p), sizeof(32));
         if (r_p%2==0) continue;
         ull r_root=log(r_p)/log(std::numbers::e);
         ull r=2*(r_root*r_root);

@@ -1,14 +1,20 @@
 
 
+#include <cassert>
 #include <iostream>
-#include "./4_Digital_Signatures/include/DSA.h"
+
+#include "3_RSA/include/Tools.h"
+#include "4_Digital_Signatures/include/DSA.h"
+
 int main()
 {
 
-    DSA_CUSTOM dsa = DSA_CUSTOM(22531, 751, 674,4488);
-    auto sig=dsa.sign_message(244);
-    auto ok = dsa.verify_message({432,211, 97}, 4488, 22476, 751,22531);
-    std::cout << (ok?"Verified!":"Failed!");
+
+    DSA_CUSTOM dsa = DSA_CUSTOM();
+    auto sig = dsa.sign_message(587);
+    ull A = fast_exponentiation(dsa.g, dsa.a, dsa.p); // public key
+    bool verified = dsa.verify_message(sig, dsa.g, A, dsa.q, dsa.p);
+    std::cout << (verified ? "VERIFIED!!!" : "FAILED!!!") << std::endl;
 
     return 0;
 }
