@@ -5,9 +5,9 @@
 int main()
 {
 
-    DSA_CUSTOM dsa = DSA_CUSTOM(48731, 443, 242,5260);
-    auto sig=dsa.sign_message(343);
-    auto ok = dsa.verify_message(sig, 5260, 3438, 443,48731);
+    DSA_CUSTOM dsa = DSA_CUSTOM(22531, 751, 674,4488);
+    auto sig=dsa.sign_message(244);
+    auto ok = dsa.verify_message({432,211, 97}, 4488, 22476, 751,22531);
     std::cout << (ok?"Verified!":"Failed!");
 
     return 0;

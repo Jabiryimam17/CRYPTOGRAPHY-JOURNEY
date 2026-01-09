@@ -12,14 +12,26 @@ POHLIG_HELLMAN::POHLIG_HELLMAN(G _p): p(_p), g(0), h(0)
 void POHLIG_HELLMAN::factorize(ull _N)
 {
     prime_factors.clear();
-    N=_N;
-    for (ull f=2; f <=N;f++)
+    N = _N;
+
+    for (ull f = 2; f * f <= _N; ++f)
     {
-        ull e=0;
-        ull acc=1;
-        while (_N%f==0) e++, _N/=f, acc*=f;
-        if (e>0) prime_factors.push_back({acc,{f, e}});
+        if (_N % f == 0)
+        {
+            ull e = 0;
+            ull acc = 1;
+            while (_N % f == 0)
+            {
+                _N /= f;
+                acc *= f;
+                ++e;
+            }
+            prime_factors.push_back({acc, {f, e}});
+        }
     }
+
+    if (_N > 1)
+        prime_factors.push_back({_N, {_N, 1}});
 }
 
 ull POHLIG_HELLMAN::solve_dhp(G _g, G _h, ull _N)
