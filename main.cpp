@@ -1,20 +1,26 @@
-
-
-#include <cassert>
 #include <iostream>
+#include <vector>
 
-#include "3_RSA/include/Tools.h"
-#include "4_Digital_Signatures/include/DSA.h"
+#include  "3_RSA/include/Tools.h"
 
 int main()
 {
-
-
-    DSA_CUSTOM dsa = DSA_CUSTOM();
-    auto sig = dsa.sign_message(587);
-    ull A = fast_exponentiation(dsa.g, dsa.a, dsa.p); // public key
-    bool verified = dsa.verify_message(sig, dsa.g, A, dsa.q, dsa.p);
-    std::cout << (verified ? "VERIFIED!!!" : "FAILED!!!") << std::endl;
-
+    std::vector<std::vector<double>> eqs{
+        {1, -2,-4, 0},
+        {-1, 1, 2, 0},
+        {3, -3, -6,0}
+    };
+    std::vector<double> ans;
+    auto s = gauss(eqs, ans);
+    if (s==0)
+    {
+        std::cout << "INCONSISTENT" << std::endl;
+        return -1;
+    }
+    std::cout << (s==1?"CONSISTENT":"DEPENDENT") << std::endl;
+    for (int x=0; x < ans.size(); x++)
+    {
+        std::cout << x << " : " << ans[x] << std::endl;
+    }
     return 0;
 }

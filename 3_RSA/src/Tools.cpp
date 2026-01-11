@@ -5,7 +5,9 @@
 #include "../include/Tools.h"
 
 #include <cmath>
+#include <iostream>
 #include <numbers>
+#include <variant>
 
 ull miller_rabin_test::random_prime_generator(unsigned int k)
 {
@@ -15,17 +17,26 @@ ull miller_rabin_test::random_prime_generator(unsigned int k)
     {
         RAND_bytes(reinterpret_cast<unsigned char*>(&r_p), 3);
         if (r_p%2==0) continue;
-        ull witness = 0;
-        prime=true;
-        for (int i=0; i < k; i++)
-        {
-            RAND_bytes(reinterpret_cast<unsigned char*>(&witness), sizeof(witness));
-            witness%=r_p;
-            if (witness==0) continue;
-            if (is_composite(r_p, witness)) {prime=false; break;}
-        }
+        prime = test_witness(k, r_p);
     };
     return r_p;
+}
+
+bool miller_rabin_test::test_witness(unsigned int k, ull p)
+{
+    ull witness = 0;
+    for (int i=0; i < k; i++)
+    {
+        RAND_bytes(reinterpret_cast<unsigned char*>(&witness), sizeof(witness));
+        witness%=p;
+        if (witness==0) continue;
+        if (is_composite(p, witness))
+        {
+            std::cout << witness << std::endl;
+            return false;
+        }
+    }
+    return true;
 }
 
 bool miller_rabin_test::is_composite(ull n, ull a)
@@ -67,4 +78,50 @@ ull miller_rabin_test::riemann_based_random_prime_generator() // conjecture base
         }
     };
     return r_p;
+}
+
+int gauss(std::vector<std::vector<double>>& a, std::vector<double>& ans)
+{
+    int n=a.size();
+    int m=a[0].size()-1;
+
+    std::vector<int> where(m, -1);
+    for (int col=0,row=0; row < n && col < m; col++)
+    {
+        int sel=row;
+        for (int i=row; i < n; i++)
+        {
+            if (a[i][col] > a[sel][col]) sel=i;
+        }
+        if (abs(a[sel][col])<EPS) continue;
+        std::swap(a[sel], a[row]);
+        where[col]=row;
+
+        for (int i=0; i < n; i++)
+        {
+            if (i!=row)
+            {
+                double c=a[i][col]/a[row][col];
+                for (int j=col; j <= m; j++) a[i][j] -= a[row][j]*c;
+            }
+        }
+        row++;
+    }
+
+    ans.assign(m, 0);
+    bool is_independent=false;
+    for (int i=0; i < m; i++)
+    {
+        if (where[i]!=-1) ans[i]=a[where[i]][m]/a[where[i]][i];
+        else is_independent=true;
+    }
+
+    for (int i=0; i < n; i++)
+    {
+        double sum=0;
+        for (int j=0; j < m; j++) sum += ans[j]*a[i][j];
+        if (abs(sum-a[i][m])>EPS) return 0;
+    }
+    return is_independent?INF:1; // there is at least one solution which is ans;
+
 }
