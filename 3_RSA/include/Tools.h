@@ -4,12 +4,14 @@
 
 #ifndef CRYPTOGRAPHY_TOOLS_H
 #define CRYPTOGRAPHY_TOOLS_H
+#include <bitset>
 #include <vector>
 #include <openssl/rand.h>
 #include  "../../1_An_Introduction_To_Cryptography/include/Tools.h"
 using ull=unsigned long long;
 const double EPS=1e-9;
 const int INF = 1e9+7;
+const int N=10;
 class miller_rabin_test
 {
 public:
@@ -20,4 +22,6 @@ public:
 };
 
 int gauss(std::vector<std::vector<double>>& a, std::vector<double>& ans);
+
+int gauss_bit(std::vector<std::bitset<N>>& a, int n, int m, std::bitset<N>& ans);
 #endif //CRYPTOGRAPHY_TOOLS_H

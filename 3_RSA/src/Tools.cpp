@@ -125,3 +125,41 @@ int gauss(std::vector<std::vector<double>>& a, std::vector<double>& ans)
     return is_independent?INF:1; // there is at least one solution which is ans;
 
 }
+
+
+int gauss_bit(std::vector<std::bitset<N>>& a, int n, int m, std::bitset<N>& ans)
+{
+    std::vector<int> where(m, -1);
+    for (int r=0, c=0; r < n&&c < m; c++)
+    {
+        for (int i=r; i < n; i++)
+        {
+            if (a[i][c])
+            {
+                std::swap(a[i], a[r]);
+                break;
+            }
+        }
+        if (a[r][c]==0) continue;
+        where[c]=r;
+        for (int i=0; i < n; i++)
+        {
+            if (i!=r && a[i][c]) a[i]^=a[r];
+        }
+        r++;
+    }
+    bool is_independent=false;
+    for (int i=0; i < m; i++)
+    {
+        if (where[i]!=-1) ans[i]=a[i][m];
+        else is_independent=true;
+    }
+
+    for (int i=0; i < n; i++)
+    {
+        int sum=0;
+        for (int j=0; j < m; j++) sum ^= a[i][j];
+        if (sum!=a[i][m]) return 0;
+    }
+    return is_independent?2:1;
+}
