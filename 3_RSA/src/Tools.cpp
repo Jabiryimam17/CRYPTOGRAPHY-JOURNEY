@@ -127,7 +127,7 @@ int gauss(std::vector<std::vector<double>>& a, std::vector<double>& ans)
 }
 
 
-int gauss_bit(std::vector<std::bitset<N>>& a, int n, int m, std::bitset<N>& ans)
+int gauss_bit(std::vector<std::bitset<N_P>>& a, int n, int m, std::bitset<N_P>& ans)
 {
     std::vector<int> where(m, -1);
     for (int r=0, c=0; r < n&&c < m; c++)
@@ -162,4 +162,39 @@ int gauss_bit(std::vector<std::bitset<N>>& a, int n, int m, std::bitset<N>& ans)
         if (sum!=a[i][m]) return 0;
     }
     return is_independent?2:1;
+}
+
+
+void gauss_bit_qs(std::vector<std::bitset<N_P>>& A, int b_n, int p_m, std::vector<std::bitset<N_B>>& ans) {
+    std::vector<std::bitset<N_B>> I(b_n);
+    for (int i = 0; i < b_n; i++) I[i].set(i);
+
+    int pivots = 0;
+    int r = 0;
+    for (int c = 0; c < p_m && r < b_n; c++) {
+        int pivot_row = r;
+        for (int i = r; i < b_n; i++) {
+            if (A[i][c]) {
+                pivot_row = i;
+                break;
+            }
+        }
+        if (A[pivot_row][c] == 0) continue;
+
+        std::swap(I[pivot_row], I[r]);
+        std::swap(A[pivot_row], A[r]);
+
+        for (int i = r + 1; i < b_n; i++) {
+            if (A[i][c]) {
+                A[i] ^= A[r];
+                I[i] ^= I[r];
+            }
+        }
+        r++;
+        pivots++;
+    }
+
+
+    ans.assign(b_n - pivots, std::bitset<N_B>());
+    for (int i = pivots; i < b_n; i++) ans[i - pivots] = I[i];
 }

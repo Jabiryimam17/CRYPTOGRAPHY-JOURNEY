@@ -11,7 +11,8 @@
 using ull=unsigned long long;
 const double EPS=1e-9;
 const int INF = 1e9+7;
-const int N=10;
+const int N_P=15;
+const int N_B=20;
 class miller_rabin_test
 {
 public:
@@ -23,5 +24,6 @@ public:
 
 int gauss(std::vector<std::vector<double>>& a, std::vector<double>& ans);
 
-int gauss_bit(std::vector<std::bitset<N>>& a, int n, int m, std::bitset<N>& ans);
+int gauss_bit(std::vector<std::bitset<N_P>>& a, int n, int m, std::bitset<N_P>& ans);
+void gauss_bit_qs(std::vector<std::bitset<N_P>>& A, int b_n, int p_m, std::vector<std::bitset<N_B>>& ans);
 #endif //CRYPTOGRAPHY_TOOLS_H

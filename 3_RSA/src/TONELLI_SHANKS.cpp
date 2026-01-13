@@ -7,6 +7,7 @@
 
 ull tonelli_shanks(ull n, ull p)
 {
+    n %= p;
     ull z;
     do {
         RAND_bytes(reinterpret_cast<unsigned char*>(&z), sizeof(z));
