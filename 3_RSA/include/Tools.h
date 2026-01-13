@@ -11,8 +11,8 @@
 using ull=unsigned long long;
 const double EPS=1e-9;
 const int INF = 1e9+7;
-const int N_P=15;
-const int N_B=20;
+const int N_P=65;
+const int N_B=1000;
 class miller_rabin_test
 {
 public:

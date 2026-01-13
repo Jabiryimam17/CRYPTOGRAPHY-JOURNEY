@@ -15,7 +15,7 @@ ull miller_rabin_test::random_prime_generator(unsigned int k)
     bool prime=false;
     while (!prime)
     {
-        RAND_bytes(reinterpret_cast<unsigned char*>(&r_p), 3);
+        RAND_bytes(reinterpret_cast<unsigned char*>(&r_p), 2);
         if (r_p%2==0) continue;
         prime = test_witness(k, r_p);
     };
@@ -30,11 +30,7 @@ bool miller_rabin_test::test_witness(unsigned int k, ull p)
         RAND_bytes(reinterpret_cast<unsigned char*>(&witness), sizeof(witness));
         witness%=p;
         if (witness==0) continue;
-        if (is_composite(p, witness))
-        {
-            std::cout << witness << std::endl;
-            return false;
-        }
+        if (is_composite(p, witness)) return false;
     }
     return true;
 }

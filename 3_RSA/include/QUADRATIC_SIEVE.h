@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include "TONELLI_SHANKS.h"
+#include "Tools.h"
 const int S=10;
 class QS
 {
@@ -19,8 +20,8 @@ public:
     void build_prime_base();
     void sieve_potentials(std::vector<ull>& candidates, ull a);
     void sieve_potentials_p(std::vector<ull>& candidates, ull a, ull p, ull s);
-    void sieve_b_smooths(std::vector<ull>& b_smooths, std::vector<int> where, std::vector<std::bitset<S>>& m, ull a);
-    void sieve_b_smooths_p(std::vector<ull>& b_smooths, std::vector<int> where, std::vector<std::bitset<S>>& m, ull a, ull p, ull s, size_t r);
+    void sieve_b_smooths(std::vector<ull>& b_smooths, std::vector<int>& where, std::vector<std::bitset<N_P>>& m, ull a);
+    void sieve_b_smooths_p(std::vector<ull>& b_smooths, std::vector<int>& where, std::vector<std::bitset<N_P>>& m, ull a, ull p, ull s, size_t c);
     ull calc_start(ull p, ull a, ull s);
     ull calc_sqrt_sol(ull p, ull n);
 };

@@ -1,40 +1,16 @@
 #include <bitset>
 #include <vector>
-
-#include "3_RSA/include/Tools.h"
-
+#include <iostream>
+#include "3_RSA/include/FACTORIZATION.h"
 
 int main()
 {
-    std::vector<std::bitset<N_P>> A = {
-        0b101010001000000,
-        0b000010100000001,
-        0b100100000000010,
-        0b001000000000000,
-        0b001010000000010,
-        0b100100100000001,
-        0b100000101000000,
-        0b101010101000000,
-        0b101110000000000,
-        0b101100000000010,
-        0b001110001000010,
-        0b000100100001000,
-        0b110000000000000,
-        0b100100100010000,
-        0b110000100000000,
-        0b110001010100000,
-        0b000000100100001,
-        0b000000110000000,
-        0b010000001010000,
-        0b110100000001000
-
-
-    };
-
-
-    std::vector<std::bitset<N_B>> ans;
-
-    gauss_bit_qs(A, 20, 15, ans); // now 15 rows × 20 columns
-
+    ull p = miller_rabin_test::random_prime_generator(10);
+    ull q = miller_rabin_test::random_prime_generator(10);
+    std::cout << p << " : " << q << std::endl;
+    RSA_FACTORIZATION rsa_breaker;
+    ull calc_p=rsa_breaker.factorize(p*q);
+    std::cout << std::boolalpha;
+    std::cout << (p==calc_p || q==calc_p) << std::endl;
     return 0;
 }

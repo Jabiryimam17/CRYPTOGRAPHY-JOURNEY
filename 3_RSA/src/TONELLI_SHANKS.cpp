@@ -19,11 +19,10 @@ ull tonelli_shanks(ull n, ull p)
     ull t = fast_exponentiation(n, q, p);
     ull c=fast_exponentiation(z, q, p);
     ull m= s;
-    while (m!=1)
+    while (t!=1)
     {
         int i=determine_order_pow(t, m, p);
-        ull exp = 1;
-        exp <<= (m - i - 1);
+        ull exp = 1ULL << (m - i - 1);
         ull b = fast_exponentiation(c, exp, p);
         r = r*b%p;
         c = b*b%p;
@@ -33,7 +32,7 @@ ull tonelli_shanks(ull n, ull p)
     return r;
 }
 
-ull determine_order_pow(ull t, ull m, ull p)
+int determine_order_pow(ull t, ull m, ull p)
 {
     for (int i=1; i<m; i++)
     {
