@@ -64,10 +64,6 @@ bool DSA_CUSTOM::verify_message(SIGNED_MESSAGE s_m, ull g, ull A, ull q, ull p)
     ull v_f=(m*s_in)%q;
     ull v_l=r*s_in%q;
     ull lhs=mod_mul(fast_exponentiation(g, v_f, p), fast_exponentiation(A, v_l, p), p)%q;
-    // std::cout << "s inverse: " << s_in << std::endl;
-    // std::cout << "v_f: " << v_f << std::endl;
-    // std::cout << "v_l: " << v_l << std::endl;
-    // std::cout << "lhs: " << lhs << "==" << r << std::endl;
     return lhs==r;
 
 }

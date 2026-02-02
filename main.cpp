@@ -1,19 +1,16 @@
 #include <vector>
 #include <iostream>
-#include "./6_Elliptic_Curves_And_Cryptography//include/Elliptic_Diffie_Hellman.h"
+#include "./6_Elliptic_Curves_And_Cryptography//include/Elliptic_DSA.h"
 
 int main()
 {
-    E_Group A = E_Group(324, 1287, 3851);
+    E_Group A = E_Group(231, 473, 17389);
     Point P = {920, 303};
-    CS_DH D_A = CS_DH(A, P), D_B = CS_DH(A, P);
-    auto [x_a, y_a] = D_A.compute_public_key();
-    auto [x_b, y_b] = D_B.compute_public_key();
-    auto S_A = D_A.compute_private_key({x_b, y_b});
-    auto S_B = D_B.compute_private_key({x_a, y_a});
-    std::cout << std::boolalpha;
-    std::cout << (S_A==S_B) << std::endl;
+    Point G={11259,11278};
+    auto sig = E_DSA::sign_message(G, A, 1321,644);
 
-    std::cout << x_a << ":" << y_a << std::endl;
+    std::cout << std::boolalpha;
+    sig = {993, 907, 296, {11017,14637}, G, 1321, A};
+    std::cout << (E_DSA::verify_signature(sig));
     return 0;
 };
