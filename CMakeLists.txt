@@ -13,6 +13,7 @@ file(GLOB CRYPTO_SRC
         "3_RSA/src/*.cpp"
         "4_Digital_Signatures/src/*.cpp"
         "5_Probability/src/*.cpp"
+        "6_Elliptic_Curves_And_Cryptography/src/*.cpp"
 )
 
 file(GLOB CRYPTO_HDR
@@ -22,6 +23,7 @@ file(GLOB CRYPTO_HDR
         "3_RSA/include/*.h"
         "4_Digital_Signatures/include/*.h"
         "5_Probability/include/*.h"
+        "6_Elliptic_Curves_And_Cryptography/include/*.h"
 )
 
 add_executable(cryptography main.cpp ${CRYPTO_SRC})

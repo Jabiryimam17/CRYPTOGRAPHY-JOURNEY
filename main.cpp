@@ -1,15 +1,11 @@
-#include <bitset>
 #include <vector>
 #include <iostream>
-
-
-#include "5_Probability/include/pollards_algorithm.h"
-
+#include "./6_Elliptic_Curves_And_Cryptography//include/Elliptic_Curve_Group.h"
 int main()
 {
-    ull x=pollard_algorithm(29,5953042, 15239131);
-    // x = solve_linear_equation(13974, 19110, 11, 41387, 81799);
-    std::cout << x << std::endl;
+    E_Group A=E_Group(1541, 1335,3221);
+    auto [x,y]=A.scalar_mul_NAF({2898,439}, 3211);
 
+    std::cout << x << ":" << y << std::endl;
     return 0;
-}
+};
