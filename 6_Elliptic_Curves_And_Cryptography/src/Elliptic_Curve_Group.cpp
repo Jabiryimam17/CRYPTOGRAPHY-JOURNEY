@@ -83,6 +83,11 @@ Point E_Group::add_point(Point P, Point Q) const
     return {x, y};
 }
 
+Point E_Group::sub_point(Point P, Point Q) const
+{
+    if (Q!=O) Q.y = (p-Q.y)%p;
+    return add_point(P, Q);
+}
 
 bool E_Group::check_sol(const Point& P) const
 {

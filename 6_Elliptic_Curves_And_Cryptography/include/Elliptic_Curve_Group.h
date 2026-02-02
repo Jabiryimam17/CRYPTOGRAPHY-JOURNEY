@@ -25,6 +25,7 @@ public:
     Point O;
     E_Group(ull A, ull B, ull p);
     [[nodiscard]] Point add_point(Point P, Point Q) const;
+    [[nodiscard]] Point sub_point(Point P, Point Q) const;
     [[nodiscard]] bool check_sol(const Point& P) const;
 
     [[nodiscard]] Point scalar_mul(Point P, ull e) const;
