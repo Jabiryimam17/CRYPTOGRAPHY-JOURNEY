@@ -15,18 +15,18 @@ static ull mod_mul(ull a, ull b, ull p)
     return (ull)(r % p);
 }
 
-static ull mod_pow(ull a, ull e, ull p)
-{
-    ull res = 1 % p;
-    a %= p;
-    while (e)
-    {
-        if (e & 1) res = mod_mul(res, a, p);
-        a = mod_mul(a, a, p);
-        e >>= 1;
-    }
-    return res;
-}
+// static ull mod_pow(ull a, ull e, ull p)
+// {
+//     ull res = 1 % p;
+//     a %= p;
+//     while (e)
+//     {
+//         if (e & 1) res = mod_mul(res, a, p);
+//         a = mod_mul(a, a, p);
+//         e >>= 1;
+//     }
+//     return res;
+// }
 
 
 E_Group::E_Group(ull A, ull B, ull p)
@@ -66,14 +66,16 @@ Point E_Group::add_point(Point P, Point Q) const
             return O;
 
         ull num = (mod_mul(3, mod_mul(P.x, P.x, p), p) + A) % p;
-        ull den = mod_pow((2 * P.y) % p, p - 2, p);
+        ull den = (extended_euclidean_algorithm((long long)p, (long long)((2*P.y)%p)).second+p)%p;
+        // ull den = mod_pow((2 * P.y) % p, p - 2, p);
         m = mod_mul(num, den, p);
     }
     else
     {
         ull num = (Q.y + p - P.y) % p;
         ull den = (Q.x + p - P.x) % p;
-        ull inv = mod_pow(den, p - 2, p);
+        ull inv = (extended_euclidean_algorithm((long long)p, (long long)den).second+p)%p;
+        // ull inv = mod_pow(den, p - 2, p);
         m = mod_mul(num, inv, p);
     }
 

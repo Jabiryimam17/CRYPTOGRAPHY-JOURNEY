@@ -5,6 +5,7 @@
 #ifndef CRYPTOGRAPHY_ELLIPTIC_CURVE_GROUP_H
 #define CRYPTOGRAPHY_ELLIPTIC_CURVE_GROUP_H
 #include <limits.h>
+#include "../../1_An_Introduction_To_Cryptography/include/EEA.h"
 using ull= unsigned long long;
 const ull INF=LLONG_MAX;
 struct Point
