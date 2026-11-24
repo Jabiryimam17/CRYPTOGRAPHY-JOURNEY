@@ -1,37 +1,42 @@
 
 cmake_minimum_required(VERSION 3.20)
 
-project(ECNT LANGUAGES CXX)
+project(Polynomials
+        VERSION 1.0.0
+        LANGUAGES CXX
+)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#add_library(ecnt
-#        src/polynomials/polynomial.cpp
-#)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-target_include_directories(ecnt PUBLIC include)
-
-target_compile_options(ecnt PRIVATE
-        -Wall
-        -Wextra
-        -Wpedantic
+# Library
+add_library(polynomials STATIC
+        src/polynomials/polynomial.cpp
+        include/ecnt/polynomials/polynomialmod.hpp
+        src/polynomials/polynomialmod.cpp
+        include/ecnt/polynomials/algorithms.hpp
+        src/polynomials/algorithms.cpp
 )
 
-#add_executable(ecnt_demo
-#        examples/basic_group_operations.cpp
-#)
+# Public headers
+target_include_directories(polynomials
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-#target_link_libraries(ecnt_demo PRIVATE ecnt)
+# Warnings for library implementation
+target_compile_options(polynomials
+        PRIVATE
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall;-Wextra;-Wpedantic>
+)
 
-#enable_testing()
+# Tests
+option(BUILD_TESTS "Build tests" OFF)
 
-#add_executable(
-#)
-#test_polynomial
-#        tests/polynomials/test_polynomial.cpp
-
-#target_link_libraries(test_polynomial PRIVATE ecnt)
-
-#add_test(NAME PolynomialTests COMMAND test_polynomial)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
