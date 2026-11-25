@@ -3,7 +3,7 @@
 #include <ecnt/polynomials/algorithms.hpp>
 namespace ecnt::fields {
 
-    PrimeField::PrimeField(ull _num, ull _p):p(_p), num(_num%p){};
+    PrimeField::PrimeField(ull _num, ull _p):p(_p), num(_num%p), characterstic(_p){};
 
     PrimeField PrimeField::operator+(const PrimeField& rhs) const {
         return {(num+rhs.num)%p, p};
@@ -26,7 +26,8 @@ namespace ecnt::fields {
     }
 
     PrimeField PrimeField::operator^( long long e) const {
-        PrimeField b{(*this)}, R{1, p};
+        PrimeField b{(*this)};
+        PrimeField R{1, p};
         if (e<0) b=b.inverse(), e*=-1;
         while (e) {
             if (e&1) R=R*b;
@@ -37,9 +38,11 @@ namespace ecnt::fields {
     }
 
     PrimeField PrimeField::inverse() const {
-        if (num==0) throw std::domain_error("Zero Division");
-        return (*this)^p-2;
+        if (*this == PrimeField{0, p}) throw std::domain_error("Zero Division");
+        return (*this) ^ static_cast<long long>(p - 2);
     }
+
+
 
     bool PrimeField::operator==(const PrimeField &rhs) const {
         return p==rhs.p && num==rhs.num;

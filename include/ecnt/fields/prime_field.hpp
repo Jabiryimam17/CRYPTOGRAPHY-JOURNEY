@@ -6,7 +6,10 @@ namespace ecnt::fields {
         ull p, num;
 
     public:
+        ull characterstic;
+
         PrimeField(ull _num = 0, ull _p = 2);
+
 
         PrimeField operator+(const PrimeField &rhs) const;
 
@@ -15,6 +18,7 @@ namespace ecnt::fields {
         PrimeField operator-() const;
 
         PrimeField operator*(const PrimeField &rhs) const;
+
 
         PrimeField operator/(const PrimeField &rhs) const;
 

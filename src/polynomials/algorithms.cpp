@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include <cstdlib>
+#include <type_traits>
 #include <ecnt/polynomials/algorithms.hpp>
 #include <ecnt/polynomials/polynomial.hpp>
 #include <ecnt/polynomials/polynomialmod.hpp>
@@ -29,6 +31,7 @@ namespace ecnt::algorithms {
         }
         return a;
     }
+
 
     template<typename G>
     G power(G b, long long e) {
@@ -81,6 +84,32 @@ namespace ecnt::algorithms {
         return x;
     }
 
+    template<typename F>
+    F lift_scalar(long long n, const F &reference) {
+        const bool is_negative = n < 0;
+        unsigned long long k = static_cast<unsigned long long>(std::llabs(n));
+
+        const F zero = reference - reference;
+        F one = zero;
+
+        if constexpr (std::is_same_v<F, ecnt::fields::PrimeField>) {
+            one = ecnt::fields::PrimeField(1, reference.characterstic);
+        } else {
+            one = zero + F{1};
+        }
+
+        F result = zero;
+        F base = one;
+
+        while (k) {
+            if (k & 1ULL) result = result + base;
+            base = base + base;
+            k >>= 1ULL;
+        }
+
+        return is_negative ? -result : result;
+    }
+
     template ExtendedGcdResult<int> extended_gcd<int>(int a, int b);
     template int gcd<int>(int a, int b);
     template int power<int>(int b, long long e);
@@ -96,4 +125,7 @@ namespace ecnt::algorithms {
                                                               ecnt::Polynomial<ecnt::fields::PrimeField> b);
     template ecnt::Polynomial<ecnt::fields::PrimeField>
     power<ecnt::Polynomial<ecnt::fields::PrimeField>>(ecnt::Polynomial<ecnt::fields::PrimeField> b, long long e);
+
+    template ecnt::fields::PrimeField
+    lift_scalar<ecnt::fields::PrimeField>(long long n, const ecnt::fields::PrimeField &reference);
 }

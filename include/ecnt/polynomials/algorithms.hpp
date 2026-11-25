@@ -21,6 +21,8 @@ namespace ecnt::algorithms {
     template<typename G>
     G modular_inverse(const G &a, const G &mod);
 
+    template<typename F>
+    F lift_scalar(long long n, const F &reference);
 
     template<typename G>
     G CRT(std::vector<G> values, std::vector<G> modules);
