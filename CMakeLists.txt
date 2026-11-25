@@ -19,6 +19,9 @@ add_library(polynomials STATIC
         src/polynomials/polynomialmod.cpp
         include/ecnt/polynomials/algorithms.hpp
         src/polynomials/algorithms.cpp
+        tests/polynomials_tests.cpp
+        include/ecnt/fields/prime_field.hpp
+        src/fields/prime_field.cpp
 )
 
 # Public headers

@@ -1,5 +1,7 @@
 #include <ecnt/polynomials/polynomial.hpp>
 #include <stdexcept>
+#include <algorithm>
+#include <ecnt/fields/prime_field.hpp>
 #include <ecnt/polynomials/algorithms.hpp>
 
 namespace ecnt {
@@ -46,7 +48,7 @@ namespace ecnt {
     template<typename F>
     Polynomial<F> Polynomial<F>::operator+(const Polynomial &rhs) const {
         auto pn{degree()}, qn{rhs.degree()};
-        size_t rn{max(qn, pn)};
+        size_t rn{std::max(qn, pn)};
         Polynomial<F> R(rn);
         for (size_t i{0}; i <= rn; i++) {
             R[i] = (i <= pn ? (*this)[i] : F{0}) + (i <= qn ? rhs[i] : F{0});
@@ -57,7 +59,7 @@ namespace ecnt {
     template<typename F>
     Polynomial<F> Polynomial<F>::operator-(const Polynomial &rhs) const {
         auto pn{degree()}, qn{rhs.degree()};
-        size_t rn{max(pn, qn)};
+        size_t rn{std::max(pn, qn)};
         Polynomial<F> R(rn);
         for (size_t i{0}; i <= rn; i++) {
             R[i] = (i <= pn ? (*this)[i] : F{0}) - (i <= qn ? rhs[i] : F{0});
@@ -94,11 +96,14 @@ namespace ecnt {
         size_t qn{pn >= dn ? pn - dn : 0};
         Polynomial R(*this), Q(qn);
         F inv_lead_d(F{1} / rhs[dn]);
-        for (size_t i{pn}; i >= dn; --i) {
+        for (size_t i{pn + 1}; i-- > dn;) {
             if (R[i] == F{0}) continue;
             Q[i - dn] = R[i] * inv_lead_d;
             F mul{-Q[i - dn]};
             for (size_t j{0}; j <= dn; j++) R[j + i - dn] = R[j + i - dn] + mul * rhs[j];
+        }
+        if (dn == 0 && R[0] != F{0}) {
+            Q[0] = R[0] * inv_lead_d;
         }
         return Q;
     }
@@ -109,17 +114,20 @@ namespace ecnt {
         if (rhs == Polynomial(dn)) throw std::domain_error("Polynomial division by zero polynomial");
         Polynomial R(*this);
         F inv_lead_d(F{1} / rhs[dn]);
-        for (size_t i{pn}; i >= dn; --i) {
+        for (size_t i{pn + 1}; i-- > dn;) {
             if (R[i] == F{0}) continue;
             F mul{-(R[i] * inv_lead_d)};
             for (size_t j{0}; j <= dn; j++) R[j + i - dn] = R[j + i - dn] + mul * rhs[j];
+        }
+        if (dn == 0) {
+            R[0] = F{0};
         }
         return R;
     }
 
     template<typename F>
     Polynomial<F> Polynomial<F>::operator^(long long e) const {
-        if (e < 0) throw std::domain_error("Negative Exponent Not Allowed")
+        if (e < 0) throw std::domain_error("Negative Exponent Not Allowed");
         return algorithms::power(*this, e);
     }
 
@@ -133,4 +141,7 @@ namespace ecnt {
     F &Polynomial<F>::operator[](size_t i) {
         return coefficients[i];
     }
+
+    template class Polynomial<int>;
+    template class Polynomial<ecnt::fields::PrimeField>;
 }

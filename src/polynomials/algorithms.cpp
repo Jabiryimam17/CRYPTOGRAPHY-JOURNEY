@@ -1,5 +1,8 @@
 #include <stdexcept>
 #include <ecnt/polynomials/algorithms.hpp>
+#include <ecnt/polynomials/polynomial.hpp>
+#include <ecnt/polynomials/polynomialmod.hpp>
+#include <ecnt/fields/prime_field.hpp>
 
 namespace ecnt::algorithms {
     template<typename I>
@@ -12,9 +15,9 @@ namespace ecnt::algorithms {
             a = b;
             b = r;
             upp = up, vpp = vp;
-            up = un, vn = vp;
+            up = un, vp = vn;
         }
-        return {a, {upp, vpp}};
+        return {a, upp, vpp};
     }
 
     template<typename I>
@@ -30,7 +33,7 @@ namespace ecnt::algorithms {
     template<typename G>
     G power(G b, long long e) {
         if (e < 0) {
-            b = b.inverse();
+            throw std::domain_error("Negative exponent is not supported for this type");
             e = -e;
         }
 
@@ -49,10 +52,10 @@ namespace ecnt::algorithms {
     G modular_inverse(const G &a, const G &mod) {
         auto result{extended_gcd(a, mod)};
 
-        if (result.gcd != G{1})
+        if (result.g != G{1})
             throw std::domain_error("Inverse not found");
 
-        return result.x % mod;
+        return result.u % mod;
     }
 
     template<typename G>
@@ -77,4 +80,20 @@ namespace ecnt::algorithms {
         }
         return x;
     }
+
+    template ExtendedGcdResult<int> extended_gcd<int>(int a, int b);
+    template int gcd<int>(int a, int b);
+    template int power<int>(int b, long long e);
+    template int modular_inverse<int>(const int &a, const int &mod);
+    template int CRT<int>(std::vector<int> values, std::vector<int> modules);
+
+    template ExtendedGcdResult<ecnt::Polynomial<int>> extended_gcd<ecnt::Polynomial<int>>(ecnt::Polynomial<int> a,
+                                                                                             ecnt::Polynomial<int> b);
+    template ecnt::Polynomial<int> power<ecnt::Polynomial<int>>(ecnt::Polynomial<int> b, long long e);
+
+    template ExtendedGcdResult<ecnt::Polynomial<ecnt::fields::PrimeField>>
+    extended_gcd<ecnt::Polynomial<ecnt::fields::PrimeField>>(ecnt::Polynomial<ecnt::fields::PrimeField> a,
+                                                              ecnt::Polynomial<ecnt::fields::PrimeField> b);
+    template ecnt::Polynomial<ecnt::fields::PrimeField>
+    power<ecnt::Polynomial<ecnt::fields::PrimeField>>(ecnt::Polynomial<ecnt::fields::PrimeField> b, long long e);
 }
