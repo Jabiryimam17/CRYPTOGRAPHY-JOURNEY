@@ -4,10 +4,10 @@
 #include <ecnt/elliptic_curves/ecgs.hpp>
 #include <ecnt/polynomials/algorithms.hpp>
 
-namespace ecnt {
+namespace ecnt::affine {
     template<typename F>
     ECGS<F>::ECGS(F A, F B): A(A), B(B) {
-        if (A.characterstic==2 || A.characterstic==3 || B.characterstic==2 || B.characterstic==3) throw std::invalid_argument("Invalid Curve");
+        if (A.characterstic==2 || A.characterstic==3) throw std::invalid_argument("Invalid Curve");
 
         if (determinant() == (A - A)) {
             throw std::invalid_argument("Invalid curve");

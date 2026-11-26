@@ -112,6 +112,7 @@ namespace ecnt::algorithms {
 
     template ExtendedGcdResult<int> extended_gcd<int>(int a, int b);
     template int gcd<int>(int a, int b);
+    template unsigned long long gcd<unsigned long long>(unsigned long long a, unsigned long long b);
     template int power<int>(int b, long long e);
     template int modular_inverse<int>(const int &a, const int &mod);
     template int CRT<int>(std::vector<int> values, std::vector<int> modules);

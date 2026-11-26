@@ -4,7 +4,7 @@
 #include <ecnt/elliptic_curves/ecgs.hpp>
 #include <ecnt/polynomials/algorithms.hpp>
 
-namespace ecnt {
+namespace ecnt::affine {
     template<typename F>
     Point<F>::Point(F x, F y, ECGS<F>* E): x(x), y(y), E(E) {}
 

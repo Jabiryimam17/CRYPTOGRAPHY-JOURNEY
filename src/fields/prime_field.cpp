@@ -1,9 +1,22 @@
 #include <stdexcept>
 #include <ecnt/fields/prime_field.hpp>
 #include <ecnt/polynomials/algorithms.hpp>
+
 namespace ecnt::fields {
 
-    PrimeField::PrimeField(ull _num, ull _p):p(_p), num(_num%p), characterstic(_p){};
+    ull& PrimeField::default_characterstic_ref() {
+        static ull default_characterstic = 2;
+        return default_characterstic;
+    }
+
+    PrimeField::PrimeField(): PrimeField(0, default_characterstic_ref()) {}
+
+    PrimeField::PrimeField(ull _num): PrimeField(_num, default_characterstic_ref()) {}
+
+    PrimeField::PrimeField(ull _num, ull _p):p(_p), num(_num%p), characterstic(_p) {
+        if (p == 0) throw std::invalid_argument("Characteristic must be non-zero");
+        default_characterstic_ref() = p;
+    }
 
     PrimeField PrimeField::operator+(const PrimeField& rhs) const {
         return {(num+rhs.num)%p, p};

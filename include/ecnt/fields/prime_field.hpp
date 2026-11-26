@@ -3,12 +3,18 @@
 using ull = unsigned long long;
 namespace ecnt::fields {
     class PrimeField {
+        static ull& default_characterstic_ref();
+
         ull p, num;
 
     public:
         ull characterstic;
 
-        PrimeField(ull _num = 0, ull _p = 2);
+        PrimeField();
+
+        explicit PrimeField(ull _num);
+
+        PrimeField(ull _num, ull _p);
 
 
         PrimeField operator+(const PrimeField &rhs) const;
