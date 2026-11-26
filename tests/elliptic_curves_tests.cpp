@@ -9,12 +9,16 @@
 #include "../src/elliptic_curves/ecgs.cpp"
 #include "../src/elliptic_curves/projective_point.cpp"
 #include "../src/elliptic_curves/projective_ecgs.cpp"
+#include "../src/elliptic_curves/jacobian_point.cpp"
+#include "../src/elliptic_curves/jacobian_ecgs.cpp"
 
 using ecnt::fields::PrimeField;
 using AffineCurve = ecnt::affine::ECGS<PrimeField>;
 using AffinePoint = ecnt::affine::Point<PrimeField>;
 using ProjectiveCurve = ecnt::projective::ECGS<PrimeField>;
 using ProjectivePoint = ecnt::projective::Point<PrimeField>;
+using JacobianCurve = ecnt::jacobian::ECGS<PrimeField>;
+using JacobianPoint = ecnt::jacobian::Point<PrimeField>;
 
 namespace {
     constexpr unsigned long long p = 101;
@@ -258,6 +262,124 @@ namespace {
         }
         assert(minus_thrown);
     }
+
+    void test_jacobian_ecgs_properties() {
+        JacobianCurve e(f_large(2), f_large(3));
+        assert(e.determinant() == f_large(275));
+        assert(e.j_invariant() == f_large(611112));
+
+        JacobianCurve same(f_large(2), f_large(3));
+        assert(e == same);
+        assert(e.isomorphic(same));
+
+        JacobianCurve non_iso(f_large(2), f_large(1));
+        assert(!e.isomorphic(non_iso));
+
+        bool thrown = false;
+        try {
+            (void) JacobianCurve(f_large(0), f_large(0));
+        } catch (const std::invalid_argument &) {
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
+    void test_jacobian_point_factory_and_identity() {
+        JacobianCurve e(f_large(2), f_large(3));
+
+        auto p0 = e.point(f_large(3), f_large(6), f_large(1));
+        auto same = e.point(f_large(75), f_large(750), f_large(5));
+        auto large_valid = e.point(f_large(455218), f_large(492175), f_large(442291));
+        assert(p0 == same);
+
+        auto infinity = e.point();
+        assert(p0 + infinity == p0);
+        assert(infinity + p0 == p0);
+        assert(infinity + infinity == infinity);
+        assert(large_valid + infinity == large_valid);
+
+        bool thrown = false;
+        try {
+            (void) e.point(f_large(1), f_large(1), f_large(1));
+        } catch (const std::invalid_argument &) {
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
+    void test_jacobian_point_arithmetic() {
+        JacobianCurve e(f_large(2), f_large(3));
+
+        auto p0 = e.point(f_large(3), f_large(6), f_large(1));
+        auto q = e.point(f_large(126), f_large(25), f_large(1));
+        auto r = e.point(f_large(318862), f_large(153992), f_large(1));
+        auto two_p = e.point(f_large(868058), f_large(985537), f_large(1));
+        auto infinity = e.point();
+
+        assert(p0 + q == r);
+        assert(q + p0 == r);
+        assert(p0 + p0 == two_p);
+
+        assert(p0.inverse() == -p0);
+        assert(p0 - q == p0 + (-q));
+
+        assert(p0 + (-p0) == infinity);
+        assert((-p0) + p0 == infinity);
+    }
+
+    void test_jacobian_scalar_multiplication() {
+        JacobianCurve e(f_large(2), f_large(3));
+
+        auto p0 = e.point(f_large(3), f_large(6), f_large(1));
+        auto two_p = e.point(f_large(868058), f_large(985537), f_large(1));
+        auto five_p = e.point(f_large(682116), f_large(992905), f_large(1));
+        auto ten_p = e.point(f_large(565278), f_large(269036), f_large(1));
+        auto neg_ten_p = e.point(f_large(565278), f_large(730967), f_large(1));
+        auto infinity = e.point();
+
+        assert(p0 * 0 == infinity);
+        assert(0 * p0 == infinity);
+
+        assert(p0 * 1 == p0);
+        assert(1 * p0 == p0);
+
+        assert(p0 * 2 == two_p);
+        assert(2 * p0 == two_p);
+
+        assert(p0 * 5 == five_p);
+        assert(5 * p0 == five_p);
+        assert(p0 * 10 == ten_p);
+        assert(p0 * -1 == -p0);
+        assert(-1 * p0 == -p0);
+        assert(p0 * -10 == neg_ten_p);
+        assert(p0 * -10 == -(p0 * 10));
+    }
+
+    void test_jacobian_cross_curve_operations_throw() {
+        JacobianCurve e1(f_large(2), f_large(3));
+        JacobianCurve e2(f_large(2), f_large(3));
+
+        auto p1 = e1.point(f_large(3), f_large(6), f_large(1));
+        auto p2 = e2.point(f_large(3), f_large(6), f_large(1));
+
+        assert(!(p1 == p2));
+
+        bool plus_thrown = false;
+        try {
+            (void) (p1 + p2);
+        } catch (const std::invalid_argument &) {
+            plus_thrown = true;
+        }
+        assert(plus_thrown);
+
+        bool minus_thrown = false;
+        try {
+            (void) (p1 - p2);
+        } catch (const std::invalid_argument &) {
+            minus_thrown = true;
+        }
+        assert(minus_thrown);
+    }
 }
 
 int main() {
@@ -271,6 +393,11 @@ int main() {
     test_projective_point_arithmetic();
     test_projective_scalar_multiplication();
     test_projective_cross_curve_operations_throw();
+    test_jacobian_ecgs_properties();
+    test_jacobian_point_factory_and_identity();
+    test_jacobian_point_arithmetic();
+    test_jacobian_scalar_multiplication();
+    test_jacobian_cross_curve_operations_throw();
     std::cout << "All elliptic-curve tests passed\n";
     return 0;
 }
