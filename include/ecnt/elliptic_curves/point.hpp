@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ecnt {
+namespace ecnt::affine {
     template<typename F>
     class ECGS;
 

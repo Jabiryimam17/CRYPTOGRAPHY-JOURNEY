@@ -2,7 +2,7 @@
 
 #include <ecnt/elliptic_curves/point.hpp>
 
-namespace ecnt {
+namespace ecnt::affine {
     template<typename F>
     class ECGS {
         F A, B;
