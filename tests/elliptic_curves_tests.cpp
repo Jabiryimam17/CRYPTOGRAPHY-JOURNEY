@@ -3,10 +3,11 @@
 #include <stdexcept>
 
 #include <ecnt/fields/prime_field.hpp>
-#include <ecnt/elliptic_curves/group.hpp>
 
 #include "../src/elliptic_curves/point.cpp"
 #include "../src/elliptic_curves/ecgs.cpp"
+#include "../src/elliptic_curves/general_point.cpp"
+#include "../src/elliptic_curves/ecgg.cpp"
 #include "../src/elliptic_curves/projective_point.cpp"
 #include "../src/elliptic_curves/projective_ecgs.cpp"
 #include "../src/elliptic_curves/jacobian_point.cpp"
@@ -15,6 +16,8 @@
 using ecnt::fields::PrimeField;
 using AffineCurve = ecnt::affine::ECGS<PrimeField>;
 using AffinePoint = ecnt::affine::Point<PrimeField>;
+using GeneralCurve = ecnt::affine::ECGG<PrimeField>;
+using GeneralPoint = ecnt::affine::GPoint<PrimeField>;
 using ProjectiveCurve = ecnt::projective::ECGS<PrimeField>;
 using ProjectivePoint = ecnt::projective::Point<PrimeField>;
 using JacobianCurve = ecnt::jacobian::ECGS<PrimeField>;
@@ -129,6 +132,125 @@ namespace {
 
         auto p1 = e1.point(f(0), f(1));
         auto p2 = e2.point(f(0), f(1));
+
+        assert(!(p1 == p2));
+
+        bool plus_thrown = false;
+        try {
+            (void) (p1 + p2);
+        } catch (const std::invalid_argument &) {
+            plus_thrown = true;
+        }
+        assert(plus_thrown);
+
+        bool minus_thrown = false;
+        try {
+            (void) (p1 - p2);
+        } catch (const std::invalid_argument &) {
+            minus_thrown = true;
+        }
+        assert(minus_thrown);
+    }
+
+    void test_ecgg_properties() {
+        GeneralCurve e(f(0), f(0), f(0), f(2), f(3));
+        assert(!(e.determinant() == f(0)));
+
+        GeneralCurve same(f(0), f(0), f(0), f(2), f(3));
+        assert(e == same);
+        assert(!(e != same));
+        assert(e.j_invariant() == same.j_invariant());
+        assert(e.isomorphic(same));
+
+        GeneralCurve non_iso(f(0), f(0), f(0), f(2), f(4));
+        assert(!e.isomorphic(non_iso));
+
+        bool thrown = false;
+        try {
+            (void) GeneralCurve(f(0), f(0), f(0), f(0), f(0));
+        } catch (const std::invalid_argument &) {
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
+    void test_general_point_factory_and_identity() {
+        GeneralCurve e(f(0), f(0), f(0), f(2), f(3));
+
+        auto p0 = e.point(f(95), f(49));
+        auto same = e.point(f(95), f(49));
+        assert(p0 == same);
+
+        auto infinity = e.point();
+        assert(p0 + infinity == p0);
+        assert(infinity + p0 == p0);
+        assert(infinity + infinity == infinity);
+
+        bool thrown = false;
+        try {
+            (void) e.point(f(1), f(1));
+        } catch (const std::invalid_argument &) {
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
+    void test_general_point_arithmetic() {
+        GeneralCurve e(f(0), f(0), f(0), f(2), f(3));
+
+        auto p0 = e.point(f(95), f(49));
+        auto q = e.point(f(79), f(44));
+        auto r = e.point(f(64), f(68));
+        auto two_p = e.point(f(21), f(32));
+        auto y_zero = e.point(f(100), f(0));
+        auto infinity = e.point();
+
+        assert(p0 + q == r);
+        assert(q + p0 == r);
+        assert(p0 + p0 == two_p);
+        assert((p0 + q) - q == p0);
+
+        assert(p0.inverse() == -p0);
+        assert(p0 - q == p0 + (-q));
+
+        assert(p0 + (-p0) == infinity);
+        assert((-p0) + p0 == infinity);
+        assert(y_zero + y_zero == infinity);
+    }
+
+    void test_general_point_scalar_multiplication() {
+        GeneralCurve e(f(0), f(0), f(0), f(2), f(3));
+
+        auto p0 = e.point(f(95), f(49));
+        auto two_p = e.point(f(21), f(32));
+        auto five_p = e.point(f(18), f(35));
+        auto infinity = e.point();
+
+        assert(p0 * 0 == infinity);
+        assert(0 * p0 == infinity);
+
+        assert(p0 * 1 == p0);
+        assert(1 * p0 == p0);
+
+        assert(p0 * 2 == two_p);
+        assert(2 * p0 == two_p);
+
+        assert(p0 * 5 == five_p);
+        assert(5 * p0 == five_p);
+
+        assert(p0 * -1 == -p0);
+        assert(-1 * p0 == -p0);
+        assert(p0 * -10 == -(p0 * 10));
+
+        assert(p0 * 3 == p0 + p0 + p0);
+    }
+
+    void test_general_point_cross_curve_operations_throw() {
+        GeneralCurve e1(f(0), f(0), f(0), f(2), f(3));
+        GeneralCurve e2(f(0), f(0), f(0), f(2), f(3));
+
+        auto p1 = e1.point(f(95), f(49));
+        auto p2 = e2.point(f(95), f(49));
 
         assert(!(p1 == p2));
 
@@ -388,6 +510,11 @@ int main() {
     test_point_arithmetic();
     test_scalar_multiplication();
     test_cross_curve_operations_throw();
+    test_ecgg_properties();
+    test_general_point_factory_and_identity();
+    test_general_point_arithmetic();
+    test_general_point_scalar_multiplication();
+    test_general_point_cross_curve_operations_throw();
     test_projective_ecgs_properties();
     test_projective_point_factory_and_identity();
     test_projective_point_arithmetic();
