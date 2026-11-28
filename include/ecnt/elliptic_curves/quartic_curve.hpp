@@ -16,7 +16,7 @@ namespace ecnt::affine {
 
         QuarticCurve(F a, F b, F c, F d, F e);
 
-        bool check_point(Q Point);
+        bool check_point(const QPoint<F>& P) const;
 
         QuarticCurve shift_curve(F p);
 
