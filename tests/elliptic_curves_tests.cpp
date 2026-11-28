@@ -12,6 +12,7 @@
 #include "../src/elliptic_curves/projective_ecgs.cpp"
 #include "../src/elliptic_curves/jacobian_point.cpp"
 #include "../src/elliptic_curves/jacobian_ecgs.cpp"
+#include "../src/transformations/weierstrass_interconversions.cpp"
 
 using ecnt::fields::PrimeField;
 using AffineCurve = ecnt::affine::ECGS<PrimeField>;
@@ -22,6 +23,7 @@ using ProjectiveCurve = ecnt::projective::ECGS<PrimeField>;
 using ProjectivePoint = ecnt::projective::Point<PrimeField>;
 using JacobianCurve = ecnt::jacobian::ECGS<PrimeField>;
 using JacobianPoint = ecnt::jacobian::Point<PrimeField>;
+using ecnt::affine::general_to_short_weistrass_curve;
 
 namespace {
     constexpr unsigned long long p = 101;
@@ -35,6 +37,12 @@ namespace {
     PrimeField f_large(long long value) {
         const auto reduced = (value % static_cast<long long>(p_large) + static_cast<long long>(p_large)) % static_cast<long long>(p_large);
         return PrimeField(static_cast<unsigned long long>(reduced), p_large);
+    }
+
+    PrimeField f_small(long long value) {
+        constexpr unsigned long long p_small = 3;
+        const auto reduced = (value % static_cast<long long>(p_small) + static_cast<long long>(p_small)) % static_cast<long long>(p_small);
+        return PrimeField(static_cast<unsigned long long>(reduced), p_small);
     }
 
     void test_ecgs_properties() {
@@ -269,6 +277,25 @@ namespace {
             minus_thrown = true;
         }
         assert(minus_thrown);
+    }
+
+    void test_general_to_short_weistrass_curve_conversion() {
+        GeneralCurve eg(f(0), f(0), f(0), f(2), f(3));
+        auto es = general_to_short_weistrass_curve(eg);
+        auto expected = AffineCurve(f(2), f(3));
+        assert(es == expected);
+    }
+
+    void test_general_to_short_weistrass_characteristic_guard() {
+        ecnt::affine::ECGG<PrimeField> small_curve(f_small(0), f_small(0), f_small(0), f_small(1), f_small(1));
+
+        bool curve_thrown = false;
+        try {
+            (void) general_to_short_weistrass_curve(small_curve);
+        } catch (const std::invalid_argument&) {
+            curve_thrown = true;
+        }
+        assert(curve_thrown);
     }
 
     void test_projective_ecgs_properties() {
@@ -515,6 +542,8 @@ int main() {
     test_general_point_arithmetic();
     test_general_point_scalar_multiplication();
     test_general_point_cross_curve_operations_throw();
+    test_general_to_short_weistrass_curve_conversion();
+    test_general_to_short_weistrass_characteristic_guard();
     test_projective_ecgs_properties();
     test_projective_point_factory_and_identity();
     test_projective_point_arithmetic();
